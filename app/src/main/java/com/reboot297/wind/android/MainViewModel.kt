@@ -12,12 +12,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(app: Application) : AndroidViewModel(app) {
-    val data = MutableLiveData<List<Item>>()
+    val data = MutableLiveData<Group>()
     val urlData = MutableLiveData<String>()
 
     fun load(uri: Uri) {
         val text = readTextFromUri(uri = uri)
-        val result = parseJSON(text)
+        val result = parseJsonGroup(text)
         data.postValue(result)
     }
 
@@ -35,6 +35,10 @@ class MainViewModel @Inject constructor(app: Application) : AndroidViewModel(app
     private fun parseJSON(source: String): List<Item> {
         val itemType = object : TypeToken<List<Item>>() {}.type
         return Gson().fromJson(source, itemType)
+    }
+
+    private fun parseJsonGroup(source: String) : Group {
+        return Gson().fromJson(source, Group::class.java)
     }
 
     fun openUrl(url: String) {

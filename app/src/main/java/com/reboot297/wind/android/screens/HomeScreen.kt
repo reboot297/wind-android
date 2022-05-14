@@ -28,26 +28,42 @@ fun HomeScreenPreview() {
 
 @Composable
 fun HomeScreen(viewModel: MainViewModel) {
-    val list = viewModel.data.observeAsState(listOf()).value
+    val list = viewModel.data.observeAsState().value?.items.orEmpty()
     LazyColumn(modifier = Modifier.fillMaxHeight()) {
         items(items = list, itemContent = { item ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable(onClick = {
-                        viewModel.openUrl(item.link)
-                    })
                     .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
             ) {
-                Text(text = item.title, style = TextStyle(fontSize = 16.sp))
-                Text(
-                    text = item.link,
-                    style = TextStyle(
-                        fontSize = 14.sp,
-                        fontStyle = FontStyle.Italic,
-                        color = Color.Blue
+                Text(text = item.title.toString(), style = TextStyle(fontSize = 16.sp))
+
+                item.links?.forEach{
+                    Text(
+                        text = it.toString(),
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Italic,
+                            color = Color.Blue
+                        ),
+                        modifier = Modifier.clickable {
+                            viewModel.openUrl(it)
+                        }
                     )
-                )
+                }
+                item.media?.forEach{
+                    Text(
+                        text = it,
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontStyle = FontStyle.Italic,
+                            color = Color.Blue
+                        ),
+                        modifier = Modifier.clickable {
+                            viewModel.openUrl(it)
+                        }
+                    )
+                }
             }
         })
     }
